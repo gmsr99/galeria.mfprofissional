@@ -30,15 +30,15 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
   return (
     <>
       <Head>
-        <title>Next.js Conf 2022 Photos</title>
+        <title>MF Profissional - Galeria</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta
           property="og:image"
-          content="https://nextjsconf-pics.vercel.app/og-image.png"
+          content="https://res.cloudinary.com/db304aaga/image/upload/v1772480031/header_cr7lop.png"
         />
         <meta
           name="twitter:image"
-          content="https://nextjsconf-pics.vercel.app/og-image.png"
+          content="https://res.cloudinary.com/db304aaga/image/upload/v1772480031/header_cr7lop.png"
         />
       </Head>
       <main className="mx-auto max-w-[1960px] p-4">
