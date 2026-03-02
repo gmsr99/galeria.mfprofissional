@@ -103,7 +103,10 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           >
             <ArrowDownTrayIcon className="mb-4 h-12 w-12 text-white/75 group-hover:text-white" />
             <h2 className="text-xl font-bold tracking-widest uppercase">Descarregar Tudo</h2>
-            <p className="max-w-[30ch] text-sm text-white/75">Clica aqui para obteres a galeria completa (ZIP).</p>
+            <p className="max-w-[40ch] text-sm text-white/75">
+              As imagens descarregadas através deste botão vão estar comprimidas, logo têm{" "}
+              <strong className="font-bold text-red-600">baixa resolução</strong>. Se desejar a imagem de alta resolução, opte por descarregar através da própria imagem.
+            </p>
           </a>
         </div>
       </main>
