@@ -69,18 +69,19 @@ export default function SharedModal({
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="absolute"
+                className="absolute inset-0 flex items-center justify-center"
               >
                 <Image
                   src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
                     }/image/upload/${currentImage.public_id
                     }.${currentImage.format}`}
-                  width={navigation ? 1280 : 1920}
-                  height={navigation ? 853 : 1280}
+                  width={Number(currentImage.width)}
+                  height={Number(currentImage.height)}
                   priority
                   unoptimized
                   alt="Full resolution image"
                   onLoad={() => setLoaded(true)}
+                  className="max-h-full max-w-full object-contain"
                 />
               </motion.div>
             </AnimatePresence>
