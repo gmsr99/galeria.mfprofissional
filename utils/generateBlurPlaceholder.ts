@@ -11,15 +11,26 @@ export default async function getBase64ImageUrl(
   if (url) {
     return url;
   }
-  const response = await fetch(
-    `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/f_jpg,w_8,q_70/${image.public_id}.${image.format}`,
-  );
-  const buffer = await response.arrayBuffer();
-  const minified = await imagemin.buffer(Buffer.from(buffer), {
-    plugins: [imageminJpegtran()],
-  });
+  try {
+    const response = await fetch(
+      `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/f_jpg,w_8,q_70/${image.public_id}.${image.format}`
+    );
 
-  url = `data:image/jpeg;base64,${Buffer.from(minified).toString("base64")}`;
-  cache.set(image, url);
-  return url;
+    if (!response.ok) {
+      console.error(`Failed to fetch blur image for ${image.public_id}: ${response.statusText}`);
+      return "";
+    }
+
+    const buffer = await response.arrayBuffer();
+    const minified = await imagemin.buffer(Buffer.from(buffer), {
+      plugins: [imageminJpegtran()],
+    });
+
+    url = `data:image/jpeg;base64,${Buffer.from(minified).toString("base64")}`;
+    cache.set(image, url);
+    return url;
+  } catch (error) {
+    console.error(`Error generating blur placeholder for ${image.public_id}:`, error);
+    return "";
+  }
 }

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
-import Bridge from "../components/Icons/Bridge";
+import { EnvelopeIcon, PhoneIcon, UserIcon } from "@heroicons/react/24/outline";
 import Logo from "../components/Icons/Logo";
 import Modal from "../components/Modal";
 import cloudinary from "../utils/cloudinary";
@@ -31,6 +31,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
     <>
       <Head>
         <title>Next.js Conf 2022 Photos</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta
           property="og:image"
           content="https://nextjsconf-pics.vercel.app/og-image.png"
@@ -49,31 +50,27 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             }}
           />
         )}
-        <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
-          <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-white/10 px-6 pb-16 pt-64 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
-            <div className="absolute inset-0 flex items-center justify-center opacity-20">
-              <span className="flex max-h-full max-w-full items-center justify-center">
-                <Bridge />
-              </span>
-              <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
-            </div>
+        <div className="relative mb-5 flex h-[400px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-black text-center text-white shadow-highlight">
+          <Image
+            src="https://res.cloudinary.com/db304aaga/image/upload/v1772480031/header_cr7lop.png"
+            alt="Header Background"
+            className="object-cover opacity-60"
+            fill
+            priority
+            unoptimized
+          />
+          <div className="relative z-10 flex flex-col items-center">
             <Logo />
-            <h1 className="mt-8 mb-4 text-base font-bold uppercase tracking-widest">
-              2022 Event Photos
+            <h1 className="mt-8 mb-4 text-base font-bold uppercase tracking-widest text-center">
+              4.° Congresso MF Profissional<br />
+              - Edição Internacional, em Aveiro
             </h1>
-            <p className="max-w-[40ch] text-white/75 sm:max-w-[32ch]">
-              Our incredible Next.js community got together in San Francisco for
-              our first ever in-person conference!
+            <p className="max-w-[40ch] text-white/75 sm:max-w-[32ch] mx-auto">
+              Galeria online e portfólio de imagens.
             </p>
-            <a
-              className="pointer z-10 mt-6 rounded-lg border border-white bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/10 hover:text-white md:mt-4"
-              href="https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-cloudinary&project-name=nextjs-image-gallery&repository-name=with-cloudinary&env=NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,CLOUDINARY_FOLDER&envDescription=API%20Keys%20from%20Cloudinary%20needed%20to%20run%20this%20application"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Clone and Deploy
-            </a>
           </div>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {images.map(({ id, public_id, format, blurDataUrl }) => (
             <Link
               key={id}
@@ -87,8 +84,8 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
                 alt="Next.js Conf photo"
                 className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
                 style={{ transform: "translate3d(0, 0, 0)" }}
-                placeholder="blur"
-                blurDataURL={blurDataUrl}
+                placeholder={blurDataUrl ? "blur" : "empty"}
+                blurDataURL={blurDataUrl || undefined}
                 src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_720/${public_id}.${format}`}
                 width={720}
                 height={480}
@@ -101,35 +98,27 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           ))}
         </div>
       </main>
-      <footer className="p-6 text-center text-white/80 sm:p-12">
-        Thank you to{" "}
-        <a
-          href="https://edelsonphotography.com/"
-          target="_blank"
-          className="font-semibold hover:text-white"
-          rel="noreferrer"
-        >
-          Josh Edelson
-        </a>
-        ,{" "}
-        <a
-          href="https://www.newrevmedia.com/"
-          target="_blank"
-          className="font-semibold hover:text-white"
-          rel="noreferrer"
-        >
-          Jenny Morgan
-        </a>
-        , and{" "}
-        <a
-          href="https://www.garysextonphotography.com/"
-          target="_blank"
-          className="font-semibold hover:text-white"
-          rel="noreferrer"
-        >
-          Gary Sexton
-        </a>{" "}
-        for the pictures.
+      <footer className="p-6 sm:p-12 flex justify-end">
+        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-4 text-white/80 text-sm">
+          <div className="flex items-center gap-2">
+            <UserIcon className="h-4 w-4" />
+            <span>Por Gil Ribeiro</span>
+          </div>
+          <span className="hidden sm:inline">-</span>
+          <div className="flex items-center gap-2">
+            <EnvelopeIcon className="h-4 w-4" />
+            <a href="mailto:ribeiro.gil4@gmail.com" className="hover:text-white transition-colors">
+              ribeiro.gil4@gmail.com
+            </a>
+          </div>
+          <span className="hidden sm:inline">-</span>
+          <div className="flex items-center gap-2">
+            <PhoneIcon className="h-4 w-4" />
+            <a href="tel:+351933667482" className="hover:text-white transition-colors">
+              933667482
+            </a>
+          </div>
+        </div>
       </footer>
     </>
   );
@@ -140,7 +129,7 @@ export default Home;
 export async function getStaticProps() {
   const results = await cloudinary.v2.search
     .expression(`folder:${process.env.CLOUDINARY_FOLDER}/*`)
-    .sort_by("public_id", "desc")
+    .sort_by("public_id", "asc")
     .max_results(400)
     .execute();
   let reducedResults: ImageProps[] = [];
