@@ -11,16 +11,31 @@ export default async function handler(
             return res.status(500).json({ error: "CLOUDINARY_FOLDER is not set" });
         }
 
-        // Generate a signed URL to download all images matching the folder prefix
+        // 1. Fetch all public IDs in the folder
+        const searchResults = await cloudinary.v2.search
+            .expression(`folder:${folder}/*`)
+            .max_results(400)
+            .execute();
+
+        const publicIds = searchResults.resources.map((file: any) => file.public_id);
+
+        if (publicIds.length === 0) {
+            return res.status(404).json({ error: "No images found in the specified folder." });
+        }
+
+        // 2. Tag all these images dynamically (Cloudinary supports up to 1000 in one batch)
+        const tagName = "mf_profissional_zip_download";
+        await cloudinary.v2.uploader.add_tag(tagName, publicIds);
+
+        // 3. Generate a Cloudinary GET URL that natively zips everything with this tag
         const url = cloudinary.v2.utils.download_zip_url({
-            prefixes: folder,
-            resource_type: "image",
+            tags: tagName,
+            resource_type: "image"
         });
 
-        // Redirect the user directly to the ZIP download prompt
         res.redirect(url);
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error generating ZIP url:", error);
-        res.status(500).json({ error: "Failed to generate download url" });
+        res.status(500).json({ error: "Failed to generate download url", details: error.message || error.toString() });
     }
 }
