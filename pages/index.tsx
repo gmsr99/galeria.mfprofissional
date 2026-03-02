@@ -11,6 +11,7 @@ import cloudinary from "../utils/cloudinary";
 import getBase64ImageUrl from "../utils/generateBlurPlaceholder";
 import type { ImageProps } from "../utils/types";
 import { useLastViewedPhoto } from "../utils/useLastViewedPhoto";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 
 const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
   const router = useRouter();
@@ -96,6 +97,14 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               />
             </Link>
           ))}
+          <a
+            href="/api/download"
+            className="after:content group relative mb-5 flex h-[480px] w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-lg bg-white/10 px-6 text-center text-white shadow-highlight transition hover:bg-white/20 after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
+          >
+            <ArrowDownTrayIcon className="mb-4 h-12 w-12 text-white/75 group-hover:text-white" />
+            <h2 className="text-xl font-bold tracking-widest uppercase">Descarregar Tudo</h2>
+            <p className="max-w-[30ch] text-sm text-white/75">Clica aqui para obteres a galeria completa (ZIP).</p>
+          </a>
         </div>
       </main>
       <footer className="p-6 sm:p-12 flex justify-end">
