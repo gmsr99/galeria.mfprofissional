@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EnvelopeIcon, PhoneIcon, UserIcon } from "@heroicons/react/24/outline";
 import Logo from "../components/Icons/Logo";
 import Modal from "../components/Modal";
@@ -17,6 +17,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
   const router = useRouter();
   const { photoId } = router.query;
   const [lastViewedPhoto, setLastViewedPhoto] = useLastViewedPhoto();
+  const [activeTab, setActiveTab] = useState<"fotos" | "videos">("fotos");
 
   const lastViewedPhotoRef = useRef<HTMLAnchorElement>(null);
 
@@ -69,45 +70,76 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             <p className="max-w-[40ch] text-white/75 sm:max-w-[32ch] mx-auto">
               Galeria online e portfólio de imagens.
             </p>
+            <div className="mt-6 flex gap-2 rounded-full bg-white/10 p-1 backdrop-blur-md">
+              <button
+                onClick={() => setActiveTab("fotos")}
+                className={`rounded-full px-6 py-2 text-sm font-medium transition-colors ${activeTab === "fotos" ? "bg-white text-black" : "text-white hover:bg-white/20"
+                  }`}
+              >
+                Fotos
+              </button>
+              <button
+                onClick={() => setActiveTab("videos")}
+                className={`rounded-full px-6 py-2 text-sm font-medium transition-colors ${activeTab === "videos" ? "bg-white text-black" : "text-white hover:bg-white/20"
+                  }`}
+              >
+                Vídeos
+              </button>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {images.map(({ id, public_id, format, blurDataUrl }) => (
-            <Link
-              key={id}
-              href={`/?photoId=${id}`}
-              as={`/p/${id}`}
-              ref={id === Number(lastViewedPhoto) ? lastViewedPhotoRef : null}
-              shallow
-              className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
-            >
-              <Image
-                alt="Next.js Conf photo"
-                className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
-                style={{ transform: "translate3d(0, 0, 0)" }}
-                placeholder={blurDataUrl ? "blur" : "empty"}
-                blurDataURL={blurDataUrl || undefined}
-                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_720/${public_id}.${format}`}
-                width={720}
-                height={480}
-                sizes="(max-width: 640px) 100vw,
-                  (max-width: 1280px) 50vw,
-                  (max-width: 1536px) 33vw,
-                  25vw"
-              />
-            </Link>
-          ))}
-          <a
-            href="/api/download"
-            className="after:content group relative mb-5 flex h-[480px] w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-lg bg-white/10 px-6 text-center text-white shadow-highlight transition hover:bg-white/20 after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
-          >
-            <ArrowDownTrayIcon className="mb-4 h-12 w-12 text-white/75 group-hover:text-white" />
-            <h2 className="text-xl font-bold tracking-widest uppercase">Descarregar Tudo</h2>
-            <p className="max-w-[40ch] text-sm text-white/75">
-              As imagens descarregadas através deste botão vão estar comprimidas, logo têm{" "}
-              <strong className="font-bold text-red-600">baixa resolução</strong>. Se desejar a imagem de alta resolução, opte por descarregar através da própria imagem.
-            </p>
-          </a>
+          {activeTab === "fotos" ? (
+            <>
+              {images.map(({ id, public_id, format, blurDataUrl }) => (
+                <Link
+                  key={id}
+                  href={`/?photoId=${id}`}
+                  as={`/p/${id}`}
+                  ref={id === Number(lastViewedPhoto) ? lastViewedPhotoRef : null}
+                  shallow
+                  className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
+                >
+                  <Image
+                    alt="Next.js Conf photo"
+                    className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
+                    style={{ transform: "translate3d(0, 0, 0)" }}
+                    placeholder={blurDataUrl ? "blur" : "empty"}
+                    blurDataURL={blurDataUrl || undefined}
+                    src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_720/${public_id}.${format}`}
+                    width={720}
+                    height={480}
+                    sizes="(max-width: 640px) 100vw,
+                      (max-width: 1280px) 50vw,
+                      (max-width: 1536px) 33vw,
+                      25vw"
+                  />
+                </Link>
+              ))}
+              <a
+                href="/api/download"
+                className="after:content group relative mb-5 flex h-[480px] w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-lg bg-white/10 px-6 text-center text-white shadow-highlight transition hover:bg-white/20 after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
+              >
+                <ArrowDownTrayIcon className="mb-4 h-12 w-12 text-white/75 group-hover:text-white" />
+                <h2 className="text-xl font-bold tracking-widest uppercase">Descarregar Tudo</h2>
+                <p className="max-w-[40ch] text-sm text-white/75">
+                  As imagens descarregadas através deste botão vão estar comprimidas, logo têm{" "}
+                  <strong className="font-bold text-red-600">baixa resolução</strong>. Se desejar a imagem de alta resolução, opte por descarregar através da própria imagem.
+                </p>
+              </a>
+            </>
+          ) : (
+            <div className="col-span-1 sm:col-span-2 xl:col-span-3 2xl:col-span-4 flex justify-center w-full mb-8">
+              <video
+                controls
+                className="w-full max-w-4xl rounded-lg shadow-highlight bg-black/50"
+                poster="https://res.cloudinary.com/db304aaga/video/upload/v1772540758/red_carpet_1_h05vuj.jpg"
+              >
+                <source src="https://res.cloudinary.com/db304aaga/video/upload/v1772540758/red_carpet_1_h05vuj.mp4" type="video/mp4" />
+                O seu browser não suporta a tag de vídeo.
+              </video>
+            </div>
+          )}
         </div>
       </main>
       <footer className="p-6 sm:p-12 flex justify-end">
